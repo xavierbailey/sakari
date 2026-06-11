@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roll Call — Sushi Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain"></div>
+
+<header class="topbar">
+  <div class="brand" onclick="goHome()">
+    <span class="brand-mark">巻</span>
+    <div class="brand-text">
+      <span class="brand-name">Roll Call</span>
+      <span class="brand-sub">Sushi Roll Training</span>
+    </div>
+  </div>
+  <nav class="topnav" id="topnav">
+    <button data-screen="home" class="nav-btn active">Home</button>
+    <button data-screen="study" class="nav-btn">Study</button>
+    <button data-screen="practice" class="nav-btn">Practice</button>
+    <button data-screen="quiz" class="nav-btn">Quiz</button>
+    <button data-screen="menu" class="nav-btn">Roll List</button>
+  </nav>
+</header>
+
+<main id="app">
+
+  <!-- HOME -->
+  <section class="screen active" id="screen-home">
+    <div class="hero">
+      <p class="eyebrow">New hire training</p>
+      <h1>Learn the menu<br>like the back of a nigiri.</h1>
+      <p class="hero-sub">23 rolls. Ingredients, sauces, spice levels, and the stories behind each one. Study it, drill it, then prove it.</p>
+    </div>
+
+    <div class="path">
+      <button class="path-card" data-go="study">
+        <span class="path-ticket">①</span>
+        <h3>Study</h3>
+        <p>Flip through every roll — ingredients, sauces, and notes on each card.</p>
+        <span class="path-cta">Start studying →</span>
+      </button>
+      <button class="path-card" data-go="practice">
+        <span class="path-ticket">②</span>
+        <h3>Practice</h3>
+        <p>Self-check with no score. Guess the roll, check yourself, move on.</p>
+        <span class="path-cta">Start practicing →</span>
+      </button>
+      <button class="path-card" data-go="quiz">
+        <span class="path-ticket">③</span>
+        <h3>Quiz</h3>
+        <p>The real test — multiple choice, type-ins, and ID rounds. Get a score.</p>
+        <span class="path-cta">Take the quiz →</span>
+      </button>
+      <button class="path-card" data-go="menu">
+        <span class="path-ticket">⊕</span>
+        <h3>Roll List</h3>
+        <p>The full menu reference. Browse, search, and look anything up.</p>
+        <span class="path-cta">Browse rolls →</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- STUDY -->
+  <section class="screen" id="screen-study">
+    <div class="mode-header">
+      <h2>Study Mode</h2>
+      <div class="mode-controls">
+        <label class="select-wrap">
+          <span>Card type</span>
+          <select id="study-type">
+            <option value="img-name">Picture → Name</option>
+            <option value="name-ing">Name → Ingredients</option>
+            <option value="ing-name">Ingredients → Name</option>
+            <option value="img-ing">Picture → Ingredients</option>
+          </select>
+        </label>
+        <span class="counter" id="study-counter">1 / 23</span>
+      </div>
+    </div>
+
+    <div class="card-stage">
+      <div class="ticket" id="study-card">
+        <div class="ticket-face ticket-front" id="study-front"></div>
+        <div class="ticket-face ticket-back" id="study-back"></div>
+      </div>
+    </div>
+
+    <div class="card-controls">
+      <button class="btn-ghost" id="study-prev">← Prev</button>
+      <button class="btn-primary" id="study-flip">Reveal</button>
+      <button class="btn-ghost" id="study-next">Next →</button>
+    </div>
+    <button class="btn-text" id="study-shuffle">⤳ Shuffle deck</button>
+  </section>
+
+  <!-- PRACTICE -->
+  <section class="screen" id="screen-practice">
+    <div class="mode-header">
+      <h2>Practice Mode</h2>
+      <div class="mode-controls">
+        <label class="select-wrap">
+          <span>Drill type</span>
+          <select id="practice-type">
+            <option value="img-to-roll">Picture → Guess the Roll</option>
+            <option value="ing-to-roll">Ingredients → Guess the Roll</option>
+            <option value="roll-to-ing">Roll → Guess the Ingredients</option>
+          </select>
+        </label>
+        <span class="counter" id="practice-counter">1 / 23</span>
+      </div>
+    </div>
+
+    <div class="card-stage">
+      <div class="prompt-card" id="practice-card">
+        <div class="prompt-label" id="practice-label">Guess the roll</div>
+        <div class="prompt-content" id="practice-content"></div>
+        <div class="answer-area" id="practice-answer-area">
+          <input type="text" id="practice-input" class="text-input" placeholder="Type the roll name…" autocomplete="off">
+          <button class="btn-primary" id="practice-check">Check Answer</button>
+        </div>
+        <div class="reveal-area hidden" id="practice-reveal"></div>
+      </div>
+    </div>
+
+    <div class="card-controls">
+      <button class="btn-ghost" id="practice-prev">← Prev</button>
+      <button class="btn-primary hidden" id="practice-next">Next →</button>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="screen" id="screen-quiz">
+    <div id="quiz-setup" class="quiz-setup">
+      <h2>Quiz Mode</h2>
+      <p class="hero-sub">A scored test — mix of multiple choice, type-ins, picture ID, and ingredient ID. Pass with 80% or better.</p>
+
+      <div class="setup-options">
+        <div class="setup-card">
+          <span class="setup-label">Length</span>
+          <div class="seg" id="quiz-length">
+            <button class="seg-btn" data-val="10">10</button>
+            <button class="seg-btn active" data-val="20">20</button>
+            <button class="seg-btn" data-val="30">30</button>
+          </div>
+        </div>
+        <div class="setup-card">
+          <span class="setup-label">Question types</span>
+          <div class="check-grid">
+            <label class="check-item"><input type="checkbox" value="mc" checked> Multiple choice</label>
+            <label class="check-item"><input type="checkbox" value="type" checked> Type-in answer</label>
+            <label class="check-item"><input type="checkbox" value="image" checked> Image ID</label>
+            <label class="check-item"><input type="checkbox" value="ingredient" checked> Ingredient ID</label>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary btn-large" id="quiz-start">Begin quiz</button>
+    </div>
+
+    <div id="quiz-active" class="quiz-active hidden">
+      <div class="quiz-progress-row">
+        <span id="quiz-qcounter">Question 1 / 20</span>
+        <div class="progress-track"><div class="progress-fill" id="quiz-progress"></div></div>
+      </div>
+
+      <div class="prompt-card" id="quiz-card">
+        <div class="prompt-label" id="quiz-label"></div>
+        <div class="prompt-content" id="quiz-content"></div>
+        <div class="answer-area" id="quiz-answer-area"></div>
+      </div>
+
+      <div class="card-controls">
+        <button class="btn-primary" id="quiz-submit">Submit</button>
+        <button class="btn-primary hidden" id="quiz-next">Next →</button>
+      </div>
+    </div>
+
+    <div id="quiz-results" class="quiz-results hidden">
+      <div class="result-stamp" id="result-stamp">PASS</div>
+      <h2 id="result-score">18 / 20</h2>
+      <p id="result-pct">90%</p>
+      <div class="result-breakdown" id="result-breakdown"></div>
+      <div class="card-controls">
+        <button class="btn-ghost" id="quiz-review-wrong">Review missed rolls</button>
+        <button class="btn-primary" id="quiz-retake">Take again</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section class="screen" id="screen-menu">
+    <div class="mode-header">
+      <h2>Roll List</h2>
+      <input type="text" id="menu-search" class="text-input search-input" placeholder="Search by name or ingredient…">
+    </div>
+    <div class="menu-grid" id="menu-grid"></div>
+  </section>
+
+</main>
+
+<!-- Roll detail modal -->
+<div class="modal-backdrop hidden" id="modal-backdrop">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
